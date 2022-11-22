@@ -1,0 +1,84 @@
+:root {
+    --bg: #1e2345;
+    --violet: rgb(161, 132, 240);
+    --pink: #d60087;
+    --turquoise: #2fdabd;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fredoka One', cursive;
+}
+
+body {
+    background-color: var(--bg);
+}
+
+main {
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+}
+
+.box {
+    background-color: var(--bg);
+    padding: 3rem 0 3rem 0;
+    display: grid;
+    place-items: center;
+    border-radius: 0.5rem; 
+}
+
+.box h1 {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 3em;
+}
+
+.box h2 {
+    margin-top: 5px;
+    font-size: 1.5em;
+    text-transform: uppercase;
+}
+
+.box p{
+    margin-top: 10px;
+    width: 80%;
+    text-align: center;
+}
+
+.container {
+    background: linear-gradient(100deg, var(--violet) 25%, var(--turquoise) 50%, var(--violet) 75%);
+    background-repeat: repeat;
+    padding: 1rem;
+    margin: 3rem; 
+    border-radius: 1rem;
+    animation: gradient 5s linear infinite;
+}
+
+.gradient-text {
+    background-color: var(--violet);
+    background-image: linear-gradient(45deg, var(--violet), var(--turquoise));
+    background-size: 100%;
+    background-repeat: repeat;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: -80rem 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
