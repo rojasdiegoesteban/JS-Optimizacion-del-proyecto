@@ -1,248 +1,118 @@
-// Clases
-class Producto {
-
-    constructor(marca, modelo, talle, cantidad, codigo) {
-        this.marca = marca;
-        this.modelo = modelo;
-        this.talle = talle;
-        this.cantidad = cantidad;
-        this.codigo = codigo;
+// Array de Productos
+const productos = [
+    {
+        id: "indu01",
+        nombre: "Remera Bonzo Exploited",
+        imagen: "./img/remera01.webp",
+        precio: 2500
+    },
+    {
+        id: "indu02",
+        nombre: "Remera Duck Punk",
+        imagen: "./img/remera02.webp",
+        precio: 3000
+    },
+    {
+        id: "indu03",
+        nombre: "Remera Big Tradi",
+        imagen: "./img/remera03.webp",
+        precio: 2500
+    },
+    {
+        id: "indu04",
+        nombre: "Remera Breakdown",
+        imagen: "./img/remera04.webp",
+        precio: 2500
+    },
+    {
+        id: "indu05",
+        nombre: "Remera Bonzo Orange Crush",
+        imagen: "./img/remera05.webp",
+        precio: 3000
+    },
+    {
+        id: "indu06",
+        nombre: "Remera papa pitufo",
+        imagen: "./img/remera06.webp",
+        precio: 3000
+    },
+    {
+        id: "indu07",
+        nombre: "Canguro Big Tradi Pop",
+        imagen: "./img/buzo01.webp",
+        precio: 11500
+    },
+    {
+        id: "indu08",
+        nombre: "Jogger Tradi Grey",
+        imagen: "./img/pantalon01.webp",
+        precio: 8500
     }
-};
+];
 
-class Zapatilla extends Producto {
+let productosEnCarrito = [];
+const contenedorIndu = document.querySelector("#contenedor-indu");
+const contadorCarrito = document.querySelector("#contador-carrito");
+let productosEnCarritoLS = localStorage.getItem("productos-en-carrito");
 
-    constructor(marca, modelo, talle, cantidad, codigo, comColores, ajuste) {
-        super(marca, modelo, talle, cantidad, codigo);
-        this.comColores = comColores;
-        this.ajuste = ajuste;
-    }
+function mostrarProductos() {
+    productos.forEach(producto => {
 
-    get getMarca() {
-        return this.marca;
-    }
+        const div = document.createElement("div");
+        div.classList.add("col-md-4");
+        div.classList.add("col-lg-3");
+        div.innerHTML = `
+            <div class="card shadow card-indu">
+                <img src="${producto.imagen}" class="card-img-top img-indu" alt="${producto.nombre}">
+                <div class="card-body">
+                    <h5 class="card-title titulo-indu">${producto.nombre}</h5>
+                    <p class="precio-indu">$${producto.precio}</p>
+                    <button class="btn-card boton-agregar-indu" id="${producto.id}"><span>Agregar</span></button>
+                </div>
+            </div>
+        `;
 
-    get getModelo() {
-        return this.modelo;
-    }
-};
-
-class Indumentaria extends Producto {
-
-    constructor(marca, modelo, talle, cantidad, codigo, color, tipo) {
-        super(marca, modelo, talle, cantidad, codigo);
-        this.color = color;
-        this.tipo = tipo;
-    }
-};
-
-// Funciones
-const mostrarMenu = function (msj, list) {
-    let j = 0;
-
-    for (let i = 0; i < list.length; i++) {
-        j = i + 1;
-        msj = msj + j + " - " + list[i] + "\n";
-    }
-
-    j = j + 1;
-    msj = msj + j + " - " + "Salir";
-
-    return msj;
-};
-
-function validarOpcion(mensaje, lista) {
-    let seleccionado;
-
-    while (true) {
-        seleccionado = parseInt(prompt(mostrarMenu(mensaje, lista)));
-
-        if (!isNaN(seleccionado) && seleccionado != null && seleccionado != "") {
-            break;
-        }
-        else {
-            alert("Por favor ingrese una opcion valida");
-            continue;
-        }
-
-    }
-    return seleccionado;
-};
-
-function listarProductos(lista) {
-    let msj = "";
-    /*
-        const tipo = (categ) => {
-            if(categ == "Z") {
-                return "zapatillas";
-            }
-            else if(categ == "I") {
-                return "indumentaria";
-            }
-        };
-    */
-    lista.forEach((producto) => {
-        if (producto.codigo[0] == "Z") {
-            msj = msj + "Producto: " + producto.marca + " " + producto.modelo + ", ";
-            msj = msj + "Talle: " + producto.talle + ", ";
-            msj = msj + "Colores: " + producto.comColores + ", ";
-            msj = msj + "Tipo de ajuste: " + producto.ajuste + ", ";
-            msj = msj + "Codigo: " + producto.codigo + "\n";
-            msj = msj + "---------------------------------------------------------------------" + "\n";
-        }
-        if (producto.codigo[0] == "I") {
-            msj = msj + "Producto: " + producto.marca + " " + producto.modelo + ", ";
-            msj = msj + "Tipo: " + producto.tipo + ", ";
-            msj = msj + "Talle: " + producto.talle + ", ";
-            msj = msj + "Color: " + producto.color + ", ";
-            msj = msj + "Codigo: " + producto.codigo + "\n";
-            msj = msj + "---------------------------------------------------------------------" + "\n";
-        }
+        contenedorIndu.append(div);
     });
-
-    return msj;
 };
 
-function cargarProducto(codigo, lista) {
-    let msjPantalla = "";
+function agregarProdAlCarrito(e) {
+    const idBoton = e.currentTarget.id;
+    const productoAgregar = productos.find(producto => producto.id === idBoton);
 
-    //Busco el producto en la lista de productos
-    const prodAgregado = lista.find((prod) => prod.codigo === codigo);
+    if(productosEnCarrito.some(producto => producto.id === idBoton)) {
+        const i = productosEnCarrito.findIndex(producto => producto.id === idBoton);
+        productosEnCarrito[i].cantidad++;
 
-    //Si el producto fue encontrado, lo cargo en el carrito
-    if (prodAgregado != undefined) {
-        carrito.push(prodAgregado);
-        msjPantalla = msjPantalla + "Producto agregado correctamente! \n";
-    }
-    else {
-        msjPantalla = msjPantalla + "Codigo no encontrado! \n";
+    } else {
+        productoAgregar.cantidad = 1;
+        productosEnCarrito.push(productoAgregar);
     }
 
-    alert(msjPantalla);
+    actualizarContadorCarrito();
+    localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
 };
 
-/*************************************************************************************/
-//  Creo los Objetos de mis productos
-const zapatilla1 = new Zapatilla("NIKE", "AIR FORCE", "40", "5", "ZNIAF", "Blanco", "Cordones");
-const zapatilla2 = new Zapatilla("NIKE", "AIR MAX", "42", "7", "ZNIAM", "Negro-Blanco", "Cordones");
-const zapatilla3 = new Zapatilla("ADIDAS", "FORUM", "41", "10", "ZADFO", "Blanco-Azul", "Abrojo");
-const buzo1 = new Indumentaria("DC", "skate old", "XL", "6", "IDCSO", "Gris", "Buzo Canguro");
-const remera1 = new Indumentaria("Element", "Star", "L", "10", "IELST", "Blanco", "Remera Manga corta");
-const pantalon1 = new Indumentaria("Levis", "Basic", "M", "7", "ILEBA", "Negro", "Jean basico");
+function actualizarContadorCarrito() {
+    let contador = productosEnCarrito.reduce((acu, producto) => acu + producto.cantidad, 0);
+    contadorCarrito.innerHTML = contador;
+};
 
-//Creo el listado de productos
-const zapatillas = [zapatilla1, zapatilla2, zapatilla3];
-const indumentarias = [buzo1, remera1, pantalon1];
-let carrito = [];
-/*************************************************************************************/
-const menuPrincipal = ["Zapatillas", "Indumentaria"];
-const menuSecundario = ["Agregar un nuevo producto al carrito", "Ver mi carrito"];
-let msjPrincipal = "Seleccione el tipo de producto que desea comprar:\n";
-let msjSecundario = "Seleccione una opcion:\n";
-let seleccion = 0;
-let selZapatilla = 0;
-let selIndumentaria = 0;
-let msjPantalla = "";
-let codigo = "";
 
-// Comienzo del programa
-alert("¡Bienvenido a mi tienda virtual!");
+/************************************************************************************************************/
+mostrarProductos();
+const botonesAgregar = document.querySelectorAll(".boton-agregar-indu");
 
-while (seleccion != 3) {
-
-    /*Solicito al usuario que seleccione categoria de producto o salir*/
-    seleccion = validarOpcion(msjPrincipal, menuPrincipal);
-
-    switch (seleccion) {
-        // Zapatillas
-        case 1:
-            // Creo el mensaje por pantalla, muestro la lista de los productos y pido que el usuario elija producto
-            msjPantalla = "Listado de Zapatillas:\n\n";
-            msjPantalla = msjPantalla + listarProductos(zapatillas);
-            msjPantalla = msjPantalla + "\n" + "Ingrese el codigo del producto que desea agregar a su carrito: ";
-            codigo = prompt(msjPantalla);
-
-            // cargo el producto seleccionado al carrito
-            cargarProducto(codigo, zapatillas);
-
-            //Solicito al usuario si desea seguir comprando o ver su carrito
-            selZapatilla = validarOpcion(msjSecundario, menuSecundario);
-
-            // opcion 1: sigue comprando
-            if (selZapatilla == 1) {
-                break;
-            }
-            //opcion2: muestro carrito
-            else if (selZapatilla == 2) {
-
-                if (carrito.length == 0) {
-                    alert("Su carrito esta vacio!");
-                    break;
-                }
-
-                msjPantalla = "Listado de productos en su carrito:\n";
-                msjPantalla = msjPantalla + "Cantidad de productos: " + carrito.length + "\n\n";
-                msjPantalla = msjPantalla + listarProductos(carrito);
-                alert(msjPantalla);
-            }
-            else if (selZapatilla == 3) {
-                seleccion = 3;
-                alert("¡Hasta pronto!");
-            }
-            else {
-                alert("La opcion ingresada no se encuentra disponible.");
-            }
-
-            break;
-
-        // Indumentaria
-        case 2:
-            // Creo el mensaje por pantalla, muestro la lista de los productos y pido que el usuario elija producto
-            msjPantalla = "Listado de Indumentaria:\n\n";
-            msjPantalla = msjPantalla + listarProductos(indumentarias);
-            msjPantalla = msjPantalla + "\n" + "Ingrese el codigo del producto que desea agregar a su carrito: ";
-            codigo = prompt(msjPantalla);
-
-            // cargo el producto seleccionado al carrito
-            cargarProducto(codigo, indumentarias);
-
-            //Solicito al usuario si desea seguir comprando o ver su carrito
-            selIndumentaria = validarOpcion(msjSecundario, menuSecundario);
-
-            // opcion 1: sigue comprando
-            if (selIndumentaria == 1) {
-                break;
-            }
-            //opcion2: muestro carrito
-            else if (selIndumentaria == 2) {
-
-                if (carrito.length == 0) {
-                    alert("Su carrito esta vacio!");
-                    break;
-                }
-
-                msjPantalla = "Listado de productos en su carrito:\n";
-                msjPantalla = msjPantalla + "Cantidad de productos: " + carrito.length + "\n\n";
-                msjPantalla = msjPantalla + listarProductos(carrito);
-                alert(msjPantalla);
-            }
-            else if (selIndumentaria == 3) {
-                seleccion = 3;
-                alert("¡Hasta pronto!");
-            }
-            else {
-                alert("La opcion ingresada no se encuentra disponible.");
-            }
-
-            break;
-
-        case 3:
-            alert("¡Hasta pronto!");
-            break;
-
-        default:
-            alert("La opcion ingresada no se encuentra disponible.");
-            break;
-    }
-
+if (productosEnCarritoLS) {
+    productosEnCarrito = JSON.parse(productosEnCarritoLS);
+    actualizarContadorCarrito();
+} else {
+    productosEnCarrito = [];
 }
+
+botonesAgregar.forEach(boton => {
+    boton.addEventListener("click", agregarProdAlCarrito);
+});
+
+
+
